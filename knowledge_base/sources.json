@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Think with Google",
+    "url": "https://business.google.com/en-all/think/consumer-insights/",
+    "category": "consumer_insights"
+  },
+  {
+    "name": "Think with Google",
+    "url": "https://business.google.com/us/think/ai-excellence/how-to-use-ai-to-boost-your-marketing-strategy/",
+    "category": "ai_marketing_strategy"
+  },
+  {
+    "name": "Think with Google",
+    "url": "https://business.google.com/us/think/ai-excellence/agentic-ai-marketing-teams/",
+    "category": "ai_marketing_strategy"
+  },
+  {
+    "name": "Think with Google",
+    "url": "https://business.google.com/us/think/measurement/cmo-guide-measuring-media-effectiveness/",
+    "category": "marketing_measurement"
+  },
+  {
+    "name": "HubSpot",
+    "url": "https://blog.hubspot.com/marketing/automated-email-segmentation",
+    "category": "behavioral_segmentation"
+  },
+  {
+    "name": "HubSpot",
+    "url": "https://blog.hubspot.com/marketing/email-list-segmentation",
+    "category": "email_segmentation"
+  },
+  {
+    "name": "HubSpot",
+    "url": "https://blog.hubspot.com/marketing/lifecycle-marketing",
+    "category": "lifecycle_marketing"
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/resources/behavioral-segmentation/",
+    "category": "behavioral_segmentation"
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/resources/segmentation-for-conversions/",
+    "category": "email_segmentation"
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/resources/re-engagement-emails/",
+    "category": "re_engagement"
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/resources/customer-retention-strategies/",
+    "category": "customer_retention"
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/resources/customer-retention-email/",
+    "category": "retention_email"
+  }
+]

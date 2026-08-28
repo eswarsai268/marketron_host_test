@@ -1,0 +1,602 @@
+    /* Push the entire page down slightly from the absolute top edge */
+    .block-container {
+        padding-top: 4rem !important; /* <-- Changed from 2rem to 4rem */
+    }
+    
+
+        /* Royal Blue nav buttons */
+    .st-key-back_btn button,
+    .st-key-fullscreen_btn button {
+        background-color: #2563EB; 
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+    .st-key-back_btn button:hover,
+    .st-key-fullscreen_btn button:hover {
+        background-color: #1D4ED8;
+    }
+    
+    /* Header Layout - Locked to Left and 50% Width */
+    .header-container {
+        display: flex;
+        align-items: flex-start;
+        width: 50%;
+        min-width: 600px; /* Prevents squishing on small screens */
+        margin-bottom: 10px;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .header-icon {
+        background-color: #EFF6FF;
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .header-title-group h1 {
+        margin: 0;
+        padding: 0;
+        color: #0F172A;
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+    .header-title-group h3 {
+        margin: 0;
+        padding: 0;
+        color: #2563EB;
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .header-desc {
+        color: #475569;
+        font-size: 15px;
+        padding-top: 15px !important; /* Use padding instead of margin to prevent collapsing */
+        margin-bottom: 25px;
+        width: 75%; /* Constrains the description text width too */
+    }
+
+    /* 1. Main Banner Image */
+    .st-key-cohort_banner > div > div[data-testid="stHorizontalBlock"] {
+        background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.90)), 
+                    url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf4G4m18qGuMkc5rMV_swVe92diiNcpRJNjttOVg7UTVP-DEv257hA2zw&s=10');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        padding: 40px 30px;
+        border: 1px solid #334155;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+    
+    .st-key-cohort_banner p, 
+    .st-key-cohort_banner label,
+    .st-key-cohort_banner .stMarkdown {
+        color: #F8FAFC !important;
+    }
+    
+    /* 2. Solid Dark Form Background */
+    .st-key-customer_input_form { 
+        background-color: rgba(30, 41, 59, 0.7) !important;
+        border: 1px solid #334155 !important;
+        border-radius: 12px !important;
+        padding: 25px !important;
+    }
+    
+    /* 3. Button Fixes */
+    .st-key-analyze_btn button {
+        background-color: #FFFFFF !important;
+        border: 1px solid #FFFFFF !important;
+    }
+    .st-key-analyze_btn button * {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        font-weight: 700 !important;
+        transition: color 0.2s ease;
+    }
+    .st-key-analyze_btn button:hover {
+        background-color: #0F172A !important;
+        border: 1px solid #38BDF8 !important;
+    }
+    .st-key-analyze_btn button:hover * {
+        color: #38BDF8 !important;
+        -webkit-text-fill-color: #38BDF8 !important;
+    }
+    
+    /* 4. Hide "Please enter to submit form" */
+    div[data-testid="InputInstructions"] {
+        display: none !important;
+    }
+
+    /* 5. Action button colors — matched to caption cards below them */
+    .st-key-email_btn button, .st-key-batch_email_btn button {
+        background-color: rgba(220, 38, 38, 0.75) !important;
+        border: 1px solid #DC2626 !important;
+    }
+    .st-key-email_btn button p, .st-key-batch_email_btn button p { color: #FFFFFF !important; font-weight: 600 !important; }
+    .st-key-email_btn button:hover, .st-key-batch_email_btn button:hover { background-color: rgba(220, 38, 38, 0.9) !important; }
+
+    .st-key-ad_btn button, .st-key-batch_ad_btn button {
+        background-color: rgba(217, 119, 6, 0.75) !important;
+        border: 1px solid #D97706 !important;
+    }
+    .st-key-ad_btn button p, .st-key-batch_ad_btn button p { color: #FFFFFF !important; font-weight: 600 !important; }
+    .st-key-ad_btn button:hover, .st-key-batch_ad_btn button:hover { background-color: rgba(217, 119, 6, 0.9) !important; }
+
+    .st-key-strategy_btn button, .st-key-batch_strategy_btn button {
+        background-color: rgba(30, 64, 175, 0.75) !important;
+        border: 1px solid #1E40AF !important;
+    }
+    .st-key-strategy_btn button p, .st-key-batch_strategy_btn button p { color: #FFFFFF !important; font-weight: 600 !important; }
+    .st-key-strategy_btn button:hover, .st-key-batch_strategy_btn button:hover { background-color: rgba(30, 64, 175, 0.9) !important; }
+
+    /* 6. USER CHAT BUBBLE CUSTOMIZATION */
+    /* Target the User Message Container, reverse the layout (icon on right), and apply light blue */
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]),
+    div[data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) {
+        flex-direction: row-reverse;
+        background-color: #E0F2FE !important; /* Light Blue */
+        border-radius: 12px;
+        padding: 15px;
+        margin-left: auto; /* Pushes bubble to the right */
+        margin-bottom: 15px;
+        width: 80%;
+        border: 1px solid #BAE6FD;
+    }
+    /* Force text inside the User Bubble to be dark */
+    div[data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) *,
+    div[data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) * {
+        color: #0F172A !important;
+    }
+    /* 6. Margin above the chat workspace */
+    .st-key-campaign_chat_box {
+        margin-top: 20px;
+    }
+
+    .ai-avengers-logo {
+    width: 100%;             /* Fills the column width perfectly */
+    max-width: 50px;        /* Stops it from getting too big on large screens */
+    aspect-ratio: 1 / 1;     /* Forces it to remain a perfect mathematical square */
+    border-radius: 50%;      /* Rounds the square into a perfect circle */
+    object-fit: contain;     /* <-- THIS is the magic word that prevents edge cropping */
+    object-position: center;
+    display: block;
+    margin: auto;            /* Centers it inside the column */
+    animation: logoGlow 2s infinite ease-in-out;
+}
+
+@keyframes logoGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 3px #2563EB);
+    }
+
+    50% {
+        filter:
+            drop-shadow(0 0 8px #60A5FA)
+            drop-shadow(0 0 16px #3B82F6)
+            drop-shadow(0 0 25px #93C5FD);
+    }
+}
+  .ai-title {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: "Arial Black", sans-serif;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    letter-spacing: 2px;
+    color: #2563EB !important;
+    line-height: 1.05 !important;
+}
+
+@keyframes electricFlash {
+    0%, 70%, 100% {
+        color: #1E3A8A;
+        filter: drop-shadow(0 0 0 transparent);
+        transform: scale(1);
+    }
+
+    73% {
+        color: #60A5FA;
+        filter:
+            drop-shadow(0 0 6px #60A5FA)
+            drop-shadow(0 0 14px #93C5FD);
+        transform: scale(1.12);
+    }
+
+    76% {
+        color: #DBEAFE;
+        filter:
+            drop-shadow(0 0 10px #60A5FA)
+            drop-shadow(0 0 22px #93C5FD);
+        transform: scale(1.2);
+    }
+
+    79% {
+        color: #2563EB;
+        filter: drop-shadow(0 0 3px #60A5FA);
+        transform: scale(1);
+    }
+}
+
+
+
+.ai-subtitle {
+    margin: 4px 0 0 0 !important;
+    padding: 0 !important;
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+
+    /* Lightning text effect */
+    background: linear-gradient(
+        90deg,
+        #1E3A8A 0%,
+        #2563EB 35%,
+        #DBEAFE 50%,
+        #2563EB 65%,
+        #1E3A8A 100%
+    );
+
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent !important;
+
+    animation: lightningText 6s linear infinite;
+}
+
+@keyframes lightningText {
+    0% {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+}
+.project-intro {
+    text-align: center;
+    margin: 20px auto 35px auto;
+    width: 85%;
+}
+
+.project-title {
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    color: #38BDF8 !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 10px !important;
+}
+
+.project-description {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: #475569;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ================================
+   SIDEBAR NAVIGATION
+   ================================ */
+
+.st-key-sidebar_navigation [role="radiogroup"] {
+    gap: 4px;
+}
+
+/* Each navigation item */
+.st-key-sidebar_navigation
+[role="radiogroup"]
+label[data-baseweb="radio"] {
+    border-radius: 8px;
+    padding: 9px 12px;
+    margin: 2px 0;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    border: none;
+}
+
+/* Hide the actual radio indicator */
+.st-key-sidebar_navigation
+[role="radiogroup"]
+label[data-baseweb="radio"] > div:first-child {
+    display: none !important;
+}
+
+/* Selected navigation item */
+.st-key-sidebar_navigation
+[role="radiogroup"]
+label[data-baseweb="radio"]:has(input[type="radio"]:checked) {
+    background-color: #EFF6FF;
+}
+
+/* Selected text */
+.st-key-sidebar_navigation
+[role="radiogroup"]
+label[data-baseweb="radio"]:has(input[type="radio"]:checked) p {
+    color: #2563EB !important;
+    font-weight: 650 !important;
+}
+
+/* Normal text */
+.st-key-sidebar_navigation
+[role="radiogroup"]
+label[data-baseweb="radio"] p {
+    margin: 0 !important;
+    color: #334155;
+}
+
+/* ============================================================
+   HOST PAGE
+   ============================================================ */
+/* ============================================================
+   HOST PAGE
+   ============================================================ */
+
+.st-key-host_hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+    padding: 42px 50px 36px 50px !important;
+    border-radius: 14px;
+    margin-bottom: 28px;
+    border: 1px solid #334155;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.30);
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.68),
+            rgba(0, 0, 0, 0.68)
+        ),
+        url("https://p0.piqsels.com/preview/633/410/327/business-communication-concept-illustration.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.st-key-host_hero > div {
+    position: relative;
+    z-index: 1;
+}
+
+.host-eyebrow {
+    color: #8B5CF6;
+    font-size: 0.82rem;
+    font-weight: 750;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.host-title {
+    color: #38BDF8 !important;
+    font-size: 38px !important;
+    font-weight: 750 !important;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+    max-width: 760px;
+}
+
+.host-description {
+    color: #F8FAFC !important;
+    font-size: 17px !important;
+    line-height: 1.6 !important;
+    max-width: 700px;
+    margin-top: 16px !important;
+}
+
+.st-key-host_conversation_btn button {
+    background-color: #8B5CF6 !important;
+    border: 1px solid #7C3AED !important;
+    min-height: 56px;
+    border-radius: 10px !important;
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.30);
+}
+
+.st-key-host_conversation_btn button p {
+    color: #FFFFFF !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+}
+
+.st-key-host_conversation_btn button:hover {
+    background-color: #7C3AED !important;
+    border-color: #6D28D9 !important;
+}
+  
+.st-key-host_conversation_btn button:disabled {
+    background-color: #8B5CF6 !important;
+    border: 1px solid #7C3AED !important;
+    opacity: 0.55 !important;
+    box-shadow: none !important;
+}
+
+.st-key-host_conversation_btn button:disabled p {
+    color: #FFFFFF !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+}
+
+/* ============================================================
+   INVITATION CARDS
+   ============================================================ */
+
+.invitation-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    margin: 12px 0 8px 0;
+    background: rgba(248, 250, 252, 0.92);
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+}
+
+.invitation-avatar {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 750;
+    font-size: 17px;
+}
+
+.invitation-info {
+    min-width: 0;
+}
+
+.invitation-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 2px;
+}
+
+.invitation-email {
+    font-size: 13px;
+    color: #64748B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.invitation-status {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 650;
+    color: #8B5CF6;
+}
+
+.host-section-title {
+    color: #38BDF8 !important;
+    font-size: 30px !important;
+    font-weight: 750 !important;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.host-section-description {
+    color: #64748B !important;
+    font-size: 16px !important;
+    line-height: 1.5;
+    margin-top: 0;
+}
+
+[class*="st-key-accept-btn-"] button {
+    background-color: rgba(34, 197, 94, 0.75) !important;
+    border: 1px solid #22C55E !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+}
+
+[class*="st-key-accept-btn-"] button p {
+    color: #FFFFFF !important;
+    font-weight: 650 !important;
+}
+
+[class*="st-key-accept-btn-"] button:hover {
+    background-color: rgba(34, 197, 94, 0.9) !important;
+}
+
+[class*="st-key-decline-btn-"] button {
+    background-color: rgba(220, 38, 38, 0.75) !important;
+    border: 1px solid #DC2626 !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+}
+
+[class*="st-key-decline-btn-"] button p {
+    color: #FFFFFF !important;
+    font-weight: 650 !important;
+}
+
+[class*="st-key-decline-btn-"] button:hover {
+    background-color: rgba(220, 38, 38, 0.9) !important;
+}
+
+.invite-search-result {
+    padding: 8px 0;
+}
+
+.invite-search-name {
+    color: #0F172A;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.invite-search-email {
+    color: #64748B;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.invitation-avatar img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.host-ready-message {
+    background-color: rgba(34, 197, 94, 0.85);
+    border: 1px solid #22C55E;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    padding: 14px 18px;
+    border-radius: 10px;
+}
+
+.st-key-refresh-invitations-btn button {
+    background-color: rgba(139, 92, 246, 0.80) !important;
+    border: 1px solid #8B5CF6 !important;
+    color: #FFFFFF !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    border-radius: 10px !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+}
+
+.st-key-refresh-invitations-btn button:hover {
+    background-color: rgba(139, 92, 246, 0.95) !important;
+    border-color: #8B5CF6 !important;
+}
+
+.st-key-refresh-invitations-btn button p {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.st-key-invite-people-btn button {
+    background-color: rgba(139, 92, 246, 0.80) !important;
+    border: 1px solid #8B5CF6 !important;
+    color: #FFFFFF !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+    font-weight: 650 !important;
+}
+
+.st-key-invite-people-btn button p {
+    color: #FFFFFF !important;
+    font-weight: 650 !important;
+}
+
+.st-key-invite-people-btn button:hover {
+    background-color: rgba(139, 92, 246, 0.95) !important;
+    border-color: #8B5CF6 !important;
+}
