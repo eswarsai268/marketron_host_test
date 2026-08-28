@@ -372,7 +372,29 @@ def list_members(session_id: str):
         .stream()
     )
 
-    members = [document.to_dict() for document in documents]
+    members = []
+
+    for document in documents:
+        member = document.to_dict()
+
+        user_id = member.get("user_id")
+
+        if user_id:
+            user_doc = (
+                db.collection("users")
+                .document(user_id)
+                .get()
+            )
+
+            if user_doc.exists:
+                user_data = user_doc.to_dict()
+
+                member["display_name"] = user_data.get(
+                    "display_name",
+                    "Unknown User"
+                )
+
+        members.append(member)
 
     return sorted(
         members,

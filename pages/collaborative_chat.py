@@ -165,16 +165,11 @@ if "collab_status" not in st.session_state:
 
 def append_message(message: dict[str, Any]) -> None:
     message_id = message.get("message_id")
-    
     if "collab_messages" not in st.session_state:
         st.session_state.collab_messages = []
-        
     messages = st.session_state.collab_messages
-    
     if message_id and any(existing.get("message_id") == message_id for existing in messages):
         return
-        
-    # IN-PLACE MUTATION: Streamlit cannot roll this back!
     messages.append(message)
 
 def handle_ws_events(client: CollabWebSocketClient) -> bool:
@@ -203,7 +198,9 @@ def handle_ws_events(client: CollabWebSocketClient) -> bool:
             needs_rerun = True
 
         elif event_type == "prompt_queued":
-            st.session_state.collab_queue_size = event.get("position", st.session_state.get("collab_queue_size", 0))
+            st.session_state.collab_queue_size = event.get(
+                "position", st.session_state.get("collab_queue_size", 0)
+            )
 
         elif event_type == "queue_updated":
             st.session_state.collab_queue_size = event.get("queue_size", 0)
@@ -294,57 +291,73 @@ if not session_id:
 # Reconnected exactly where it belongs
 client = initialize_page(session_id, token, user_id)
 
+# ============================================================
+# UI STYLING
+# ============================================================
+st.markdown("""
+<style>
+
+.collab-title {
+    color: #38a9e8;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 0.15rem;
+}
+
+.collab-description {
+    color: #6b7c93;
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+}
+
+div[data-testid="stPopover"] > button {
+    border-radius: 8px !important;
+    padding: 4px 8px !important;
+    min-height: 36px !important;
+    font-size: 18px !important;
+}
+
+.st-key-end_btn button,
+.st-key-leave_btn button {
+    background-color: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 7px !important;
+    font-weight: 600 !important;
+}
+
+.st-key-end_btn button:hover,
+.st-key-leave_btn button:hover {
+    background-color: #dc2626 !important;
+    color: white !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================================
+# PAGE HEADING
+# ============================================================
 st.markdown(
-    """
-    <div class="host-section-title">Collaborative Chat</div>
-    <p class="host-section-description">
-        Work together in the same Marketron AI conversation.
-    </p>
-    """,
-    unsafe_allow_html=True,
+    '<div class="collab-title">Collaborative Chat</div>',
+    unsafe_allow_html=True
 )
 
-header_left, header_mid, header_right = st.columns([2.8, 1.2, 1.2])
+st.markdown(
+    '<div class="collab-description">'
+    'Work together in the same Marketron AI conversation.'
+    '</div>',
+    unsafe_allow_html=True
+)
 
-with header_left:
-    st.markdown(f"### {session.get('title') or 'Marketron Collaboration'}")
+member_record = next(
+    (member for member in st.session_state.get("collab_members", []) if member.get("user_id") == user_id),
+    None,
+)
+is_host = bool(member_record and member_record.get("role") == "host")
 
-with header_mid:
-    connected_label = "Connected" if client.is_connected() else "Reconnecting"
-    st.caption(connected_label)
-
-with header_right:
-    member_record = next(
-        (member for member in st.session_state.get("collab_members", []) if member.get("user_id") == user_id),
-        None,
-    )
-    is_host = bool(member_record and member_record.get("role") == "host")
-
-    if is_host:
-        if st.button("End Collaboration", key="end-collaboration-btn", width="stretch"):
-            try:
-                end_session(session_id, token)
-                client.close()
-                st.session_state.pop("collaboration_session", None)
-                st.session_state.pop("collab_loaded_session_id", None)
-                st.session_state.pop("collab_messages", None)
-                st.success("Collaboration ended.")
-                st.rerun()
-            except requests.RequestException as exc:
-                st.error(f"Unable to end collaboration: {exc}")
-    else:
-        if st.button("Leave Collaboration", key="leave-collaboration-btn", width="stretch"):
-            try:
-                leave_session(session_id, token)
-                client.close()
-                st.session_state.pop("collaboration_session", None)
-                st.session_state.pop("collab_loaded_session_id", None)
-                st.session_state.pop("collab_messages", None)
-                st.success("You left the collaboration.")
-                st.rerun()
-            except requests.RequestException as exc:
-                st.error(f"Unable to leave collaboration: {exc}")
-
+# 2. The Live Fragment (Floating Widget + Chat)
 @st.fragment(run_every="1s")
 def live_collaboration():
     needs_rerun = handle_ws_events(client)
@@ -352,64 +365,54 @@ def live_collaboration():
     if st.session_state.get("collab_last_error"):
         st.warning(st.session_state.collab_last_error)
 
-    members_col, queue_col = st.columns([2.5, 1])
     member_names = {}
+
+    for member in st.session_state.get("collab_members", []):
+        user_ident = member.get("user_id")
+
+        if not user_ident:
+            continue
+
+        google_name = member.get("display_name")
+
+        if google_name:
+            label = google_name
+        else:
+            label = user_ident
+
+        if member.get("role") == "host":
+            label += " (Host)"
+
+        if user_ident == user_id:
+            label = f"{label.replace(' (Host)', '')} (You)"
+
+            if member.get("role") == "host":
+                label += " (Host)"
+
+        member_names[user_ident] = label
     
-    with members_col:
-        st.markdown("#### Members")
-        active_members = [
-            member for member in st.session_state.get("collab_members", [])
-            if member.get("status") == "active"
-        ]
 
-        if active_members:
-            member_labels = []
-            for member in active_members:
-                user_ident = member.get("user_id", "User")
-                label = user_ident if user_ident != user_id else "You"
-                
-                if len(label) > 18 and label != "You":
-                    label = label[:8] + "…"
-                    
-                if member.get("role") == "host":
-                    label += " (Host)"
-                    
-                member_labels.append(label)
-                member_names[user_ident] = label 
-                
-            st.write(" · ".join(member_labels))
-        else:
-            st.caption("No active members found.")
-
-    with queue_col:
-        if st.session_state.get("collab_processing"):
-            st.info("Marketron AI is processing…")
-        elif st.session_state.get("collab_queue_size"):
-            st.info(f"Queue position: {st.session_state.collab_queue_size}")
-        else:
-            st.caption("AI queue is clear.")
-
-    st.markdown("#### Conversation")
-
+    # Render Conversation
     messages = st.session_state.get("collab_messages", [])
 
     if not messages:
         st.caption("No messages yet.")
     else:
         for message in messages:
-            if message.get("hidden", False):
+            role = message.get("role")
+            sender = message.get("user_id", "")
+            
+            # Hide system prompts and background setups from the UI
+            if role == "system" or sender == "system" or message.get("hidden", False):
                 continue
                 
-            role = message.get("role")
             content = message.get("content", "")
-            sender = message.get("user_id", "")
 
             if role == "assistant":
                 label = "Marketron AI"
-            elif sender == user_id:
-                label = "You"
             else:
-                label = member_names.get(sender, sender[:12] + "…")
+                # Retrieve the dynamic username from the mapping dictionary
+                label = member_names.get(sender, sender)
 
             with st.chat_message("assistant" if role == "assistant" else "user"):
                 st.markdown(f"**{label}**")
@@ -420,23 +423,176 @@ def live_collaboration():
 
 live_collaboration()
 
-# Check the protected dictionary for the lock state
 is_locked = st.session_state.collab_status.get("locked", False)
 
+# ============================================================
+# COLLABORATION TOGGLE BESIDE INPUT
+# ============================================================
+
+member_record = next(
+    (
+        member
+        for member in st.session_state.get("collab_members", [])
+        if member.get("user_id") == user_id
+    ),
+    None,
+)
+
+is_host = bool(
+    member_record and member_record.get("role") == "host"
+)
+st.markdown("""
+<style>
+
+.collab-popover {
+    position: fixed;
+    right: 78px;
+    bottom: 18px;
+    z-index: 1000;
+}
+
+.collab-popover button {
+    min-height: 42px !important;
+    width: 48px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    font-size: 18px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="collab-popover">',
+    unsafe_allow_html=True
+)
+
+with st.popover("⋮"):
+
+    status_text = "Live" if client.is_connected() else "Reconnecting"
+
+    st.markdown("### Collaboration")
+
+    st.caption(f"Status: {status_text}")
+
+    st.divider()
+
+    st.markdown("**Active Members**")
+
+    active_members = [
+        member
+        for member in st.session_state.get("collab_members", [])
+        if member.get("status") == "active"
+    ]
+
+    if active_members:
+        for member in active_members:
+            user_ident = member.get("user_id", "User")
+
+            google_name = member.get("display_name")
+            label = google_name if google_name else user_ident
+
+            if user_ident == user_id:
+                label += " (You)"
+
+            if member.get("role") == "host":
+                label += " (Host)"
+
+            st.write(f"• {label}")
+
+    else:
+        st.caption("No active members found.")
+
+    st.divider()
+
+    st.markdown("**AI Queue**")
+
+    if st.session_state.get("collab_processing"):
+        st.info("Marketron AI is generating...")
+
+    elif st.session_state.get("collab_queue_size"):
+        st.warning(
+            f"Queue position: "
+            f"{st.session_state.collab_queue_size}"
+        )
+
+    else:
+        st.success("Queue is clear.")
+
+    st.divider()
+
+    if is_host:
+        if st.button(
+            "End Collaboration",
+            key="end_btn",
+            use_container_width=True
+        ):
+            try:
+                end_session(session_id, token)
+                client.close()
+
+                for key in [
+                    "collaboration_session",
+                    "collab_loaded_session_id",
+                    "collab_messages"
+                ]:
+                    st.session_state.pop(key, None)
+
+                st.rerun()
+
+            except requests.RequestException as exc:
+                st.error(f"Unable to end collaboration: {exc}")
+
+    else:
+        if st.button(
+            "Leave Collaboration",
+            key="leave_btn",
+            use_container_width=True
+        ):
+            try:
+                leave_session(session_id, token)
+                client.close()
+
+                for key in [
+                    "collaboration_session",
+                    "collab_loaded_session_id",
+                    "collab_messages"
+                ]:
+                    st.session_state.pop(key, None)
+
+                st.rerun()
+
+            except requests.RequestException as exc:
+                st.error(f"Unable to leave collaboration: {exc}")
+
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
+)
+
 prompt = st.chat_input(
-    placeholder="Ask Marketron AI..." if not is_locked else "Your prompt is waiting in the queue...",
+    placeholder=(
+        "Ask Marketron AI..."
+        if not is_locked
+        else "Your prompt is waiting in the queue..."
+    ),
     disabled=is_locked
 )
 
+
+# ============================================================
+# EXISTING PROMPT LOGIC — DO NOT CHANGE
+# ============================================================
+
 if prompt:
     prompt_text = prompt.strip()
-    
+
     if prompt_text:
         client.send({
             "event": "ai_prompt",
             "prompt": prompt_text
         })
-        # Set the protected dictionary state directly
+
         st.session_state.collab_status["locked"] = True
-        
+
     st.rerun()

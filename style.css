@@ -600,3 +600,13 @@ label[data-baseweb="radio"] p {
     background-color: rgba(139, 92, 246, 0.95) !important;
     border-color: #8B5CF6 !important;
 }
+.red-leave-btn button {
+        background-color: #ef4444 !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 600 !important;
+        transition: 0.2s;
+    }
+    .red-leave-btn button:hover {
+        background-color: #dc2626 !important;
+    }

@@ -1,6 +1,8 @@
 import asyncio
 from typing import Any, Optional
 from fastapi import Header
+import json
+from datetime import datetime, date
 
 from backend.collab_auth import (
     CollaborationAuthError,
@@ -85,8 +87,10 @@ async def _broadcast(
             continue
 
         try:
-            await connection.websocket.send_json(event)
-        except Exception:
+            # THE FIX: Safe transmission prevents the silent disconnect!
+            await _send_json_safe(connection.websocket, event)
+        except Exception as exc:
+            print(f"⚠️ [DEBUG] BROADCAST FAILED TO {connection.user_id}: {exc}", flush=True)
             dead_connections.append(connection)
 
     for connection in dead_connections:
@@ -111,8 +115,10 @@ async def _send_to_user(
             continue
 
         try:
-            await connection.websocket.send_json(event)
-        except Exception:
+            # THE FIX: Safe transmission prevents the silent disconnect!
+            await _send_json_safe(connection.websocket, event)
+        except Exception as exc:
+            print(f"⚠️ [DEBUG] SEND_TO_USER FAILED TO {user_id}: {exc}", flush=True)
             await collaboration_state.disconnect_user(
                 session_id=session_id,
                 user_id=user_id,
@@ -313,6 +319,18 @@ async def _queue_ai_prompt(
         "position": position,
         "message": user_message,
     }
+
+def _json_default(obj: Any) -> Any:
+    """Safely convert datetime objects to ISO format for WebSocket transmission."""
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+
+async def _send_json_safe(websocket: WebSocket, payload: dict[str, Any]) -> None:
+    """Safely transmit JSON over WebSocket without crashing on datetime fields."""
+    text = json.dumps(payload, default=_json_default)
+    await websocket.send_text(text)
 
 # ============================================================================
 # HEALTH
