@@ -8,7 +8,6 @@ from src.rag_engine import start_rag_warmup
 
 st.set_page_config(
     page_title="Marketron",
-    page_icon="🎯",
     layout="wide"
 )
 

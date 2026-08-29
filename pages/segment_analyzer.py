@@ -40,7 +40,7 @@ if not st.session_state.full_screen:
                         options=["Full Price Consumers", "Bargain Hunters", "Seasonal Shoppers"]
                     )
                 
-                predict_btn = st.form_submit_button("🔍 Analyze Segment Metrics",key="analyze_btn", width='stretch')
+                predict_btn = st.form_submit_button("Analyze Segment Metrics",key="analyze_btn", width='stretch')
 
         with banner_right:
             st.markdown("""
@@ -59,7 +59,7 @@ if not st.session_state.full_screen:
 # 1. Centered Loading Animation 
 if predict_btn:
     st.markdown("<br>", unsafe_allow_html=True)
-    with st.status("🧠 Processing Segment Intelligence...", expanded=True) as status:
+    with st.status("Processing Segment Intelligence...", expanded=True) as status:
         st.write("Classifying segment via ML Matrix...")
         time.sleep(0.4) 
         
@@ -131,7 +131,7 @@ if st.session_state.current_segment:
         nav_c1, nav_c2 = st.columns([5, 1])
         with nav_c1:
             if st.session_state.full_screen:
-                if st.button("⬅️ Back to Dashboard",key="back_btn" ,width='content'):
+                if st.button("Back to Dashboard",key="back_btn" ,width='content'):
                     st.session_state.full_screen = False
                     st.rerun()
         with nav_c2:
@@ -146,7 +146,7 @@ if st.session_state.current_segment:
         btn_c1, btn_c2, btn_c3 = st.columns(3)
         
         with btn_c1:
-            if st.button("📧 Email Draft", key="email_btn", width='stretch'):
+            if st.button("Email Draft", key="email_btn", width='stretch'):
                 st.session_state.pending_prompt = "Write a high-converting marketing email template (with a subject line) for this segment. Give them a compelling reason to buy again today."
                 st.session_state.pending_action = "Drafting Email Campaign..."
                 st.rerun()
@@ -158,7 +158,7 @@ if st.session_state.current_segment:
             """, unsafe_allow_html=True)
                     
         with btn_c2:
-            if st.button("📢 Social Ad Copy", key="ad_btn", width='stretch'):
+            if st.button("Social Ad Copy", key="ad_btn", width='stretch'):
                 st.session_state.pending_prompt = "Draft short, punchy Facebook/Instagram Ad copy for this segment. Include a Headline, Body Text, and CTA."
                 st.session_state.pending_action = "Drafting Ad Campaign..."
                 st.rerun()
@@ -170,7 +170,7 @@ if st.session_state.current_segment:
             """, unsafe_allow_html=True)
                     
         with btn_c3:
-            if st.button("🎯 Retention Strategy", key="strategy_btn", width='stretch'):
+            if st.button("Retention Strategy", key="strategy_btn", width='stretch'):
                 st.session_state.pending_prompt = "Provide a detailed, bulleted 3-step retention strategy and follow-up sequence for this segment."
                 st.session_state.pending_action = "Building Strategy..."
                 st.rerun()
