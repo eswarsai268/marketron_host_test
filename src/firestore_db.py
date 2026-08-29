@@ -3,6 +3,7 @@ import secrets
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 from typing import Any, Optional
+import json
 
 import firebase_admin
 from firebase_admin import credentials, firestore
