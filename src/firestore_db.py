@@ -12,30 +12,50 @@ _firestore_client = None
 
 
 def _get_firestore():
-    """
-    Lazily initialize and return the Firestore client.
-
-    Firebase must not be initialized when this module is imported.
-    """
     global _firestore_client
 
     if _firestore_client is not None:
         return _firestore_client
 
     if not firebase_admin._apps:
+
+        # ---------------------------------------------------------
+        # Option 1: Firebase JSON file
+        # Used locally and on Render.
+        # ---------------------------------------------------------
         credentials_path = os.getenv("FIREBASE_CREDENTIALS_PATH")
 
-        if not credentials_path:
-            raise RuntimeError(
-                "FIREBASE_CREDENTIALS_PATH environment variable is not set."
+        if credentials_path:
+            if not os.path.exists(credentials_path):
+                raise FileNotFoundError(
+                    f"Firebase credentials file not found: {credentials_path}"
+                )
+
+            cred = credentials.Certificate(credentials_path)
+
+        # ---------------------------------------------------------
+        # Option 2: Firebase JSON supplied through environment
+        # Used on Streamlit Cloud.
+        # ---------------------------------------------------------
+        else:
+            credentials_json = os.getenv(
+                "FIREBASE_CREDENTIALS_JSON"
             )
 
-        if not os.path.exists(credentials_path):
-            raise FileNotFoundError(
-                f"Firebase credentials file not found: {credentials_path}"
-            )
+            if not credentials_json:
+                raise RuntimeError(
+                    "Firebase credentials are not configured."
+                )
 
-        cred = credentials.Certificate(credentials_path)
+            try:
+                credentials_info = json.loads(credentials_json)
+            except json.JSONDecodeError as exc:
+                raise RuntimeError(
+                    "FIREBASE_CREDENTIALS_JSON is not valid JSON."
+                ) from exc
+
+            cred = credentials.Certificate(credentials_info)
+
         firebase_admin.initialize_app(cred)
 
     _firestore_client = firestore.client()
